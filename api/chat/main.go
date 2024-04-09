@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"github.com/thiagoripardo/k3s-example/api/chat/server"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	err := server.New().Run()
+	if err != nil {
+		panic(err)
+	}
 }
