@@ -1,16 +1,20 @@
-# Stage 1: Build the application
+# Use a multi-stage build
 FROM golang:1.22 AS builder
 
 WORKDIR /build
 COPY . .
 
-RUN CGO_ENABLED=0 go build -ldflags '-s -w' -o /build/app
+# Build for amd64
+RUN CGO_ENABLED=0 GOARCH=amd64 go build -ldflags '-s -w' -o /build/app-amd64
 
-# Stage 2: Copy the application to a new image
+# Build for arm64
+RUN CGO_ENABLED=0 GOARCH=arm64 go build -ldflags '-s -w' -o /build/app-arm64
+
+# Final stage
 FROM gcr.io/distroless/static-debian12
 
-WORKDIR /
-COPY --from=builder /build/app /bin/app
+# Copy the binaries from the previous stage
+COPY --from=builder /build/app-amd64 /bin/app-amd64
+COPY --from=builder /build/app-arm64 /bin/app-arm64
 
-# Stage 3: Set the command to run the application
-CMD ["/bin/app"]
+# The CMD instruction is omitted as it depends on the deployment environment
