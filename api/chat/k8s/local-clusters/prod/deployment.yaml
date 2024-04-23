@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: chat
-          image: ripard/chat-app:1.1.2
+          image: ripard/chat-app:1.2.2
+          command: ["/bin/app-arm64"]
           ports:
             - containerPort: 8080
           livenessProbe:

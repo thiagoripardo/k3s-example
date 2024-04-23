@@ -11,7 +11,7 @@ spec:
         - lovelybacon.com
       secretName: lovelybacon-secret
   rules:
-    - host: lovelybacon.com
+    - host: "*.lovelybacon.com"
       http:
         paths:
           - path: /
