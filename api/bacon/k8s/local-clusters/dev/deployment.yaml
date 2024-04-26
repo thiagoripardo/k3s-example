@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat
+  name: bacon
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: chat
+      app: bacon
   template:
     metadata:
       labels:
-        app: chat
+        app: bacon
     spec:
       containers:
-        - name: chat
-          image: ripard/chat-app:1.2.2
+        - name: bacon
+          image: ripard/bacon:1.0.1
           command: ["/bin/app-amd64"]
           ports:
             - containerPort: 8080

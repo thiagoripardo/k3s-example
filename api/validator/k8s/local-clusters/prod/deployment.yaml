@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat
+  name: validator
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: chat
+      app: validator
   template:
     metadata:
       labels:
-        app: chat
+        app: validator
     spec:
       containers:
-        - name: chat
-          image: ripard/chat-app:1.2.2
+        - name: validator
+          image: ripard/validator:1.0.0
           command: ["/bin/app-arm64"]
           ports:
             - containerPort: 8080
@@ -37,5 +37,5 @@ spec:
               memory: "128Mi"
               cpu: "250m"
             limits:
-              memory: "1Gi"
-              cpu: "1000m"
+              memory: "256Mi"
+              cpu: "500m"

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/thiagoripardo/k3s-example/api/chat/server"
+	"github.com/thiagoripardo/k3s-example/api/bacon/server"
 )
 
 func main() {

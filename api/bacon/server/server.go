@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/thiagoripardo/k3s-example/api/chat/domain/model"
+	"github.com/thiagoripardo/k3s-example/api/bacon/domain/model"
 )
 
 type Server struct {
@@ -46,6 +46,15 @@ func (s *Server) Run() error {
 		bacon := model.Bacons[randomInt%len(model.Bacons)]
 		baconRes.Bacon = bacon
 
+		isValid, err := verifyGeneratedBacon(baconRes)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
+		}
+
+		if !isValid {
+			return c.JSON(http.StatusBadRequest, "invalid bacon request")
+		}
+
 		fmt.Printf("instance: %s generated a bacon\n", baconRes.InstanceID)
 
 		return c.JSON(http.StatusOK, baconRes)
@@ -56,4 +65,35 @@ func (s *Server) Run() error {
 	})
 
 	return s.srv.Start(":8080")
+}
+
+func verifyGeneratedBacon(baconRes model.BaconResponse) (bool, error) {
+	payload, err := baconRes.AsBuffer()
+	if err != nil {
+		return false, err
+	}
+
+	baseURL := "http://validator.default.svc.cluster.local:3001"
+	url := fmt.Sprintf("%s/validate", baseURL)
+
+	req, err := http.NewRequest("POST", url, payload)
+	if err != nil {
+		return false, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return false, fmt.Errorf("invalid bacon request")
+	}
+
+	return true, nil
 }

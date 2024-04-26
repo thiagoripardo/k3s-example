@@ -1,4 +1,4 @@
-module github.com/thiagoripardo/k3s-example/api/chat
+module github.com/thiagoripardo/k3s-example/api/validator
 
 go 1.22
 

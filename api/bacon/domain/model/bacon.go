@@ -1,5 +1,10 @@
 package model
 
+import (
+	"bytes"
+	"encoding/json"
+)
+
 type BaconResponse struct {
 	InstanceID string `json:"instance_id"`
 	Bacon      Bacon  `json:"bacon"`
@@ -207,4 +212,13 @@ var Bacons = []Bacon{
 		BaconName:   "Hickory Houdini",
 		Description: "Hickory Houdini magically transforms ordinary bacon into a savory masterpiece, with its rich hickory flavor and smoky essence captivating your taste buds with every delicious bite.",
 	},
+}
+
+func (b *BaconResponse) AsBuffer() (*bytes.Buffer, error) {
+	jsonBytes, err := json.Marshal(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewBuffer(jsonBytes), nil
 }
